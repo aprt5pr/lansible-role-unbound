@@ -1,0 +1,29 @@
+---
+
+- name: Install Unbound
+  package:
+    name:  unbound
+    state: installed
+
+- name: Add Unbound server configuration
+  template:
+    src:  unbound.conf.j2
+    dest: "{{ unbound_directory }}/unbound.conf"
+  notify: restart unbound
+
+- name: Configure chroot
+  include: chroot.yml
+
+- name: Ensure firewall allows DNS inbound
+  firewalld:
+    service:   dns
+    permanent: True
+    state:     enabled
+    immediate: True
+    zone:      public
+
+- name: Start and enable Unbound
+  service:
+    name:    unbound
+    state:   started
+    enabled: yes

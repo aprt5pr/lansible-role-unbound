@@ -1,0 +1,91 @@
+---
+
+unbound_directory:      /etc/unbound
+
+unbound_clause_options:
+  - forward-zone
+  - stub-zone
+  - view
+
+unbound_multi_options:
+  - access-control
+  - access-control-tag
+  - access-control-tag-action
+  - access-control-tag-data
+  - access-control-view
+  - forward-zone
+  - include
+  - local-data
+  - local-data-ptr
+  - local-zone
+  - local-zone-tag
+  - private-address
+  - private-domain
+  - stub-zone
+  - view
+
+unbound_forward_zones:
+  - name:         '"."'
+    forward-addr:
+      # Level 3
+      - 209.244.0.3
+      - 209.244.0.4
+
+unbound_local_zones:
+  - '"ads.example.com." redirect'
+  - '"example.io."      static'
+
+unbound_local_data:
+  - '"ads.example.com. IN A 0.0.0.0"'
+  - '"www.example.io.  IN A 10.22.33.41"'
+  - '"www.example.io.  IN A 10.22.33.42"'
+  - '"www.example.io.  IN A 10.22.33.43"'
+
+unbound_local_data_ptrs:
+  - '"10.22.33.41 www1.example.io"'
+  - '"10.22.33.42 www2.example.io"'
+  - '"10.22.33.43 www3.example.io"'
+
+unbound_private_addresses:
+  - '10.22.33.0/24'
+
+unbound_private_domains:
+  - 'example.io'
+
+unbound_access_controls:
+  - '127.0.0.0/8    allow'
+  - '10.0.0.0/8     allow'
+  - '172.16.0.0/12  allow'
+  - '192.168.0.0/16 allow'
+
+unbound_config:
+    remote-control:
+      options:
+        - name:  control-enable
+          value: 'yes'
+    server:
+      options:
+        - name:  directory
+          value: /etc/unbound/
+        - name:  do-ip4
+          value: 'yes'
+        - name:  do-ip6
+          value: 'no'
+        - name:  log-time-ascii
+          value: 'yes'
+        - name:  rrset-roundrobin
+          value: 'yes'
+        - name:  access-control
+          value: '{{ unbound_access_controls }}'
+        - name:  private-address
+          value: '{{ unbound_private_addresses }}'
+        - name:  private-domain
+          value: '{{ unbound_private_domains }}'
+        - name:  local-zone
+          value: '{{ unbound_local_zones }}'
+        - name:  local-data
+          value: '{{ unbound_local_data }}'
+        - name:  local-data-ptr
+          value: '{{ unbound_local_data_ptrs }}'
+        - name:  forward-zone
+          value: '{{ unbound_forward_zones }}'

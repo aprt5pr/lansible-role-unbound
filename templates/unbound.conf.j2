@@ -1,0 +1,34 @@
+#jinja2: lstrip_blocks: "True"
+{% for section in unbound_config.keys() %}
+{{ section }}:
+    {% for opt in unbound_config[section].options %}
+        {% if opt.value is string %}
+    {{ opt.name }}:       {{ opt.value }}
+
+        {% elif opt.value is sequence %}
+            {% if opt.name in unbound_multi_options %}
+                {% if opt.name in unbound_clause_options %}
+                    {% for hash in opt.value  %}
+    {{ opt.name }}:
+                        {% for k in hash.keys() %}
+                            {% if hash[k] is string %}
+        {{ k }}:  {{ hash[k] }}
+                            {% else %}
+                                {% for str in hash[k] %}
+        {{ k }}:  {{ str }}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+
+                    {% endfor %}
+                {% else %}
+                    {% for multi in opt.value %}
+    {{ opt.name }}:   {{ multi }}
+                    {% endfor %}
+
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+

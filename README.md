@@ -12,7 +12,7 @@ Unbound is a caching DNS resolver. Check out https://unbound.net/documentation/u
 
 - Ansible >= 2.0
 
-## How can I contribute code to this project?
+### How can I contribute code to this project?
 
 - Fork this project
 - Commit your changes

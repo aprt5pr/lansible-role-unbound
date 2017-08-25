@@ -1,0 +1,50 @@
+---
+
+services: docker
+
+env:
+  - distro: centos7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+
+before_install:
+  # Pull container.
+  - 'docker pull geerlingguy/docker-${distro}-ansible:latest'
+
+install:
+  # Add ansible.cfg to pick up roles path.
+  - "echo '[defaults]' > ansible.cfg"
+  - "echo 'roles_path = ../' >> ansible.cfg"
+  - "cat ansible.cfg"
+
+script:
+  - container_id=$(mktemp)
+  # Run container in detached state
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/lansible-role-unbound:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+
+  # Ansible syntax check
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/lansible-role-unbound/tests/test.yml --syntax-check'
+
+  # Test role (first pass)
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/lansible-role-unbound/tests/test.yml'
+
+  # Test role (idempotence)
+  - idempotence=$(mktemp)
+  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/lansible-role-unbound/tests/test.yml | tee -a ${idempotence}
+  - >
+    tail ${idempotence}
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
+  # Test forward lookups
+  - 'docker exec -i "$(cat ${container_id})" dig +noall +answer +timeout=3 -t a github.com @$(cat ${container_id} | cut -c 1-12)'
+
+  # TODO:
+  # Test local data forward lookups
+  # Test local data reverse lookups
+  # Test remote control
+
+notifications:
+  email: false
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

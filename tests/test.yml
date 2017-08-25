@@ -1,0 +1,14 @@
+---
+
+- hosts: all
+  tasks:
+    - name: Install test dependencies
+      package:
+        name:  '{{ item }}'
+        state: installed
+      with_items:
+        - bind-utils
+
+- hosts: all
+  roles:
+    - lansible-role-unbound

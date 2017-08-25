@@ -1,9 +1,11 @@
 ---
 
-- name: Install Unbound
+- name: Install Unbound and role deps
   package:
-    name:  unbound
+    name:  '{{ item }}'
     state: installed
+  with_items:
+    - unbound
 
 - name: Add Unbound server configuration
   template:
@@ -13,14 +15,6 @@
 
 - name: Configure chroot
   include: chroot.yml
-
-- name: Ensure firewall allows DNS inbound
-  firewalld:
-    service:   dns
-    permanent: True
-    state:     enabled
-    immediate: True
-    zone:      public
 
 - name: Start and enable Unbound
   service:

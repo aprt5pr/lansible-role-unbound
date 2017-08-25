@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/aprt5pr/lansible-role-unbound.svg?branch=master)](https://travis-ci.org/aprt5pr/lansible-role-unbound)
+
 ### What does this Ansible role do?
 
 This role installs the Unbound caching DNS resolver.

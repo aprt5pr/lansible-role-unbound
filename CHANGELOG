@@ -1,2 +1,7 @@
+* Version 0.1.1 (released Aug 26 2017)
+- Officially support Ubuntu 16.04 (Xenial)
+- Add tests
+- Apply cosmetic fixes to documentation
+
 * Version 0.1.0 (released Aug 24 2017)
 - Initial release

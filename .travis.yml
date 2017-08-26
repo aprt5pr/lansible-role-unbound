@@ -56,8 +56,8 @@ script:
    && (echo 'Local data reverse: pass' && exit 0)
    || (echo 'Local data reverse: fail' && exit 1)
 
-  # TODO:
   # Test remote control
+  - docker exec -i "$(cat ${container_id})" unbound-control status
 
 notifications:
   email: false

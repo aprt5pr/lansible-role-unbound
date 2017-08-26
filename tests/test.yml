@@ -1,13 +1,32 @@
 ---
 
+- hosts: all 
+  tasks:
+    - name: Include OS-specific test variables
+      include_vars: "{{ item }}"
+      with_first_found:
+        - files:
+          - "vars/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+          - "vars/{{ ansible_distribution }}.yml"
+          - "vars/{{ ansible_os_family }}.yml"
+          skip: True
+
+- hosts: all
+  tasks:
+    - name: Update APT cache 
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_pkg_mgr == "apt"
+
 - hosts: all
   tasks:
     - name: Install test dependencies
       package:
-        name:  '{{ item }}'
+        name:  "{{ item }}"
         state: installed
       with_items:
-        - bind-utils
+        - "{{ test_deps }}"
 
 - hosts: all
   roles:

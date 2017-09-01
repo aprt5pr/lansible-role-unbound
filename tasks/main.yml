@@ -21,7 +21,7 @@
     owner: root
     group: root
   when:
-    - unbound_root_hints.content is defined
+    - unbound_root_hints is defined
 
 - name: Configure chroot
   include: chroot.yml

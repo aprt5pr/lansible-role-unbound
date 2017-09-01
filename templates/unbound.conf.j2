@@ -22,10 +22,17 @@
 
                     {% endfor %}
                 {% else %}
-                    {% for multi in opt.value %}
-    {{ opt.name }}:   {{ multi }}
-                    {% endfor %}
+                    {% if opt.name == 'include' %}
+                      {% for multi in opt.value %}
+    {{ opt.name }}:   {{ multi.path }}
+                      {% endfor %}
 
+                    {% else %}
+                      {% for multi in opt.value %}
+    {{ opt.name }}:   {{ multi }}
+                      {% endfor %}
+
+                    {% endif %}
                 {% endif %}
             {% endif %}
         {% endif %}

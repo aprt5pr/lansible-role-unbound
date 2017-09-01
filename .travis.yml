@@ -63,6 +63,9 @@ script:
   # Test remote control
   - docker exec -i "$(cat ${container_id})" unbound-control status
 
+  # TODO:
+  # Test includes
+
 notifications:
   email: false
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

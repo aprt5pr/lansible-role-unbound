@@ -23,6 +23,16 @@
   when:
     - unbound_root_hints is defined
 
+- name: Add includes
+  copy:
+    content: '{{ item.content }}'
+    dest:    '{{ item.path }}'
+    mode:  0644
+    owner: root
+    group: root
+  with_items:
+    - '{{ unbound_includes }}'
+
 - name: Configure chroot
   include: chroot.yml
 

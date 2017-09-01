@@ -13,6 +13,16 @@
     dest: "{{ unbound_directory }}/unbound.conf"
   notify: restart unbound
 
+- name: Add root hints
+  copy:
+    content: '{{ unbound_root_hints.content }}'
+    dest:    '{{ unbound_root_hints.path }}'
+    mode:  0644
+    owner: root
+    group: root
+  when:
+    - unbound_root_hints.content is defined
+
 - name: Configure chroot
   include: chroot.yml
 

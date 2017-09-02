@@ -22,6 +22,7 @@
     group: root
   when:
     - unbound_root_hints is defined
+  notify: reload unbound
 
 - name: Add includes
   copy:

@@ -32,6 +32,7 @@
     group: root
   with_items:
     - '{{ unbound_includes }}'
+  notify: reload unbound
 
 - name: Configure chroot
   include: chroot.yml

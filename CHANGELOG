@@ -1,3 +1,7 @@
+* Version 0.1.2 (released Sep 10 2017)
+- Create root hints file
+- Create include files
+
 * Version 0.1.1 (released Aug 26 2017)
 - Officially support Ubuntu 16.04 (Xenial)
 - Add tests
